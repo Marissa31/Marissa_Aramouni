@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Marissa Aramouni — Web Developer & Tutor</title>
+
+  <!-- Fonts & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* -------------------------
+       Variables & Base
+       ------------------------- */
+    :root{
+      --bg-1: #071020;
+      --bg-2: #0b1224;
+      --glass: rgba(255,255,255,0.05);
+      --glass-2: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+      --accent-a: #7c3aed;    /* violet */
+      --accent-b: #06b6d4;    /* teal */
+      --muted: #aeb6c6;
+      --text: #e9f0fb;
+      --card-shadow: 0 10px 30px rgba(2,6,23,0.5);
+      --glass-blur: 12px;
+      --radius: 16px;
+      --timing: 450ms;
+    }
+
+    /* Dark/Light mode variables */
+    :root[data-theme='light'] {
+      --bg-1: #f6f8fb;
+      --bg-2: #e9eef7;
+      --glass: rgba(255,255,255,0.65);
+      --glass-2: rgba(255,255,255,0.5);
+      --glass-border: rgba(17,24,39,0.06);
+      --muted: #556075;
+      --text: #071022;
+      --card-shadow: 0 8px 28px rgba(17,24,39,0.06);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(600px 400px at 10% 20%, rgba(124,58,237,0.12), transparent),
+                  radial-gradient(700px 450px at 90% 80%, rgba(6,182,212,0.10), transparent),
+                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      padding-top:84px; /* header space */
+    }
+
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important;}
+    }
+
+    /* -------------------------
+       Container & Utilities
+       ------------------------- */
+    .container{max-width:1180px;margin:0 auto;padding:24px}
+    .row{display:flex;gap:24px;flex-wrap:wrap}
+    .col{flex:1;min-width:260px}
+    .muted{color:var(--muted)}
+    a{color:inherit;text-decoration:none}
+
+    /* -------------------------
+       Header (Fixed Navbar)
+       ------------------------- */
+    header{
+      position:fixed;left:0;right:0;top:0;
+      min-height:72px;
+      display:flex;align-items:center;z-index:60;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-bottom:1px solid transparent;
+    }
+    header .bar{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      min-height:72px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.05rem;
+      background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    nav{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    nav a{
+      padding:8px 12px;
+      border-radius:10px;
+      font-weight:600;
+      color:var(--muted);
+      font-size:0.92rem;
+      white-space: nowrap;
+    }
+    nav a:hover, nav a:focus{
+      color:var(--text);
+      outline:none;
+      background:rgba(255,255,255,0.03)
+    }
+    .ctas{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .icon-btn{background:transparent;border:1px solid var(--glass-border);padding:8px;border-radius:10px;color:var(--muted)}
+    .icon-btn:focus{outline:2px solid rgba(124,58,237,0.18)}
+    .resume-btn{
+      background:linear-gradient(90deg,var(--accent-a),var(--accent-b)); color:white; padding:10px 14px;border-radius:12px;font-weight:700;
+      box-shadow:0 8px 30px rgba(124,58,237,0.15);border:0;
+    }
+    .theme-toggle{font-size:1.02rem;padding:8px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-2);cursor:pointer}
+
+    /* -------------------------
+       Hero
+       ------------------------- */
+    .hero{
+      margin-top:6px;
+      border-radius:20px;
+      padding:48px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:36px;
+      align-items:center;
+      position:relative;
+      margin-bottom:36px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border:1px solid var(--glass-border);
+      backdrop-filter: blur(var(--glass-blur));
+      box-shadow:var(--card-shadow);
+      overflow:hidden;
+    }
+
+    /* animated background layer */
+    .hero::after{
+      content:"";
+      position:absolute;inset:0;pointer-events:none;
+      background: radial-gradient(400px 200px at 10% 10%, rgba(124,58,237,0.08), transparent),
+                  radial-gradient(500px 260px at 90% 80%, rgba(6,182,212,0.06), transparent);
+      mix-blend-mode: screen; opacity:1;
+    }
+
+    .hero-left {padding:8px 6px}
+    .kicker{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;background:linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08)); color:var(--text); font-size:0.82rem}
+    h1{
+      font-family:'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-size:2.4rem;margin:14px 0 10px;line-height:1.04;
+      letter-spacing:-0.01em;
+      background:linear-gradient(90deg,var(--text),rgba(124,58,237,0.9));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    p.lead{color:var(--muted);font-size:1.02rem;margin-bottom:18px;max-width:64ch}
+    .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-primary{
+      background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
+      color:white;padding:12px 16px;border-radius:12px;font-weight:700;border:0;box-shadow:0 10px 30px rgba(6,182,212,0.06);
+      transform:translateZ(0);
+    }
+    .btn-outline{
+      padding:10px 14px;border-radius:12px;border:1px solid var(--glass-border);background:transparent;color:var(--text);font-weight:700
+    }
+
+    /* hero stats */
+    .stats{display:flex;gap:14px;margin-top:20px}
+    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px 14px;border-radius:12px;border:1px solid var(--glass-border);min-width:96px;text-align:center}
+    .stat .num{font-weight:800;font-size:1.15rem;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .stat .label{font-size:0.8rem;color:var(--muted);margin-top:6px}
+
+    /* hero right card (profile) */
+    .profile-card{
+      border-radius:20px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid var(--glass-border);
+      display:flex;flex-direction:column;align-items:center;gap:14px;backdrop-filter: blur(var(--glass-blur));box-shadow:var(--card-shadow);
+      transform-style:preserve-3d;transition:transform 350ms ease, box-shadow 350ms ease;
+      will-change:transform;
+    }
+    .profile-avatar{
+      width:132px;height:132px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--accent-a),var(--accent-b));
+      box-shadow:0 8px 30px rgba(2,6,23,0.35);
+    }
+    .profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .profile-name{font-weight:800;font-size:1.05rem}
+    .profile-role{font-weight:600;color:var(--muted);font-size:0.95rem}
+    .socials{display:flex;gap:8px}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:transparent;border:1px solid var(--glass-border);color:var(--muted)}
+    .socials a:hover{transform:translateY(-4px);background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:white;border:0}
+
+    /* -------------------------
+       Sections / Cards
+       ------------------------- */
+    section.content{margin-bottom:28px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
+    .section-title{font-weight:800;font-size:1.25rem}
+    .section-sub{color:var(--muted);font-size:0.95rem}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+
+    .glass{
+      background:var(--glass);border-radius:14px;padding:18px;border:1px solid var(--glass-border);
+      backdrop-filter: blur(var(--glass-blur));box-shadow:var(--card-shadow);transition:transform var(--timing) ease, box-shadow var(--timing) ease;
+      transform-origin:center;
+    }
+    .glass:hover{transform:translateY(-8px) scale(1.01);}
+
+    /* Experience / project card tilt effect container */
+    .tilt{transform-style:preserve-3d;will-change:transform;transition:transform 280ms cubic-bezier(.2,.9,.2,1), box-shadow 280ms}
+    .tilt:hover{box-shadow:0 20px 50px rgba(2,6,23,0.45)}
+
+    .exp-title{font-weight:700;margin-bottom:6px}
+    .exp-company{color:var(--accent-b);font-weight:700}
+    .exp-date{color:var(--muted);font-size:0.9rem}
+
+    .tech-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .tech{background:linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem;color:var(--text)}
+
+    /* Skills bars */
+    .skill{
+      margin-bottom:12px;
+    }
+    .skill .meta{display:flex;justify-content:space-between;margin-bottom:6px}
+    .bar{height:10px;background:rgba(255,255,255,0.05);border-radius:999px;overflow:hidden}
+    .bar .fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));transition:width 1100ms cubic-bezier(.2,.9,.2,1)}
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 420px;gap:18px}
+    form .form-row{display:flex;gap:10px;flex-wrap:wrap}
+    input, textarea, select{
+      width:100%;padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);color:var(--text);
+      font-size:0.95rem;
+    }
+    textarea{min-height:140px;resize:vertical}
+    .submit{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:white;padding:12px 14px;border-radius:12px;border:0;font-weight:800}
+
+    /* Footer */
+    footer{margin-top:28px;padding:28px;border-radius:12px;background:transparent;color:var(--muted);display:flex;justify-content:center}
+
+    /* -------------------------
+       Animations: reveals & stagger
+       ------------------------- */
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity 520ms ease, transform 520ms ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    /* -------------------------
+       Select (Contact form)
+       ------------------------- */
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--glass-2); /* fix background */
+      border: 1px solid var(--glass-border);
+      color: var(--text); /* ensure visible text */
+      font-size: 0.95rem;
+      appearance: none;
+    }
+
+    select option {
+      background: var(--bg-1); /* dark theme */
+      color: var(--text);
+    }
+
+    :root[data-theme='light'] select option {
+      background: #fff; /* light theme */
+      color: #111;
+    }
+
+    /* MOBILE MENU */
+    .menu-toggle {
+      display: none;
+      font-size: 1.4rem;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top:72px;
+      left:0;
+      right:0;
+      background: var(--bg-1);
+      padding:20px;
+      flex-direction: column;
+      gap:16px;
+      border-bottom:1px solid var(--glass-border);
+      z-index:99;
+    }
+    .mobile-nav a {
+      font-size:1rem;
+      font-weight:600;
+      color: var(--text);
+      padding:10px;
+      border-radius:10px;
+    }
+    .mobile-nav a:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* small screens */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr; padding:28px}
+      .profile-card{order:-1;flex-direction:row;gap:12px}
+      .profile-avatar{width:92px;height:92px}
+      .contact-grid{grid-template-columns:1fr}
+      header{padding:0 12px}
+      .container{padding:12px}
+    }
+    @media (max-width:768px){
+      header .bar {
+        justify-content: center;
+        gap: 12px;
+      }
+      nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .ctas {
+        order: 2;
+        justify-content: center;
+      }
+    }
+    @media (max-width:520px){
+      .brand{font-size:0.98rem}
+      .stats{flex-wrap:wrap}
+      .kicker{display:none}
+    }
+  </style>
+</head>
+<body>
+<!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects-shopify">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <!-- Header -->
+  <header role="banner" aria-label="Main header">
+    <div class="bar container" role="navigation">
+      <div class="brand" aria-hidden="true">
+        <i class="fa-solid fa-code" style="opacity:.9"></i>
+        Marissa Aramouni
+      </div>
+
+      <nav aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects-shopify">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="ctas" aria-hidden="false">
+        <button class="theme-toggle" id="themeToggle" aria-pressed="false" title="Toggle theme">
+          <i class="fa-regular fa-sun" id="themeIcon" aria-hidden="true"></i>
+        </button>
+       
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <!-- HERO -->
+    <section id="home" class="hero reveal" aria-labelledby="heroTitle">
+      <div class="hero-left">
+        <span class="kicker">Frontend • Tutor • UI/UX</span>
+        <h1 id="heroTitle">Marissa — Web Developer & Tutor</h1>
+        <p class="lead">I design and build polished, accessible frontends and teach students to ship real-world web projects. Focused on modern React workflows, Shopify themes, and product-led learning.</p>
+
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#projects-shopify" role="button">View Work</a>
+          <a class="btn-outline" href="#contact" role="button">Book a Session</a>
+          <a class="btn-outline" href="mailto:Marissa.aramouni31@gmail.com" role="button" title="Email Marissa">Email</a>
+        </div>
+
+        <div class="stats" aria-hidden="true">
+          <div class="stat">
+            <div class="num">5+</div>
+            <div class="label">Years</div>
+          </div>
+          <div class="stat">
+            <div class="num">30+</div>
+            <div class="label">Students</div>
+          </div>
+          <div class="stat">
+            <div class="num">10+</div>
+            <div class="label">Projects</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="profile-card tilt" id="profileCard" aria-label="Profile card">
+        <div class="profile-avatar" aria-hidden="true">
+          <!-- Replace with your photo (preferred: 2:2 crop, 600px) -->
+          <img src="image.png">
+        </div>
+        <div style="text-align:center">
+          <div class="profile-name">Marissa Aramouni</div>
+          <div class="profile-role">Web Developer • Tutor</div>
+          <div class="muted" style="font-size:0.9rem;margin-top:6px">Roumieh, Mount Lebanon — Remote-friendly</div>
+
+       <div class="socials" style="margin-top:12px;justify-content:center">
+    <a href="https://www.linkedin.com/in/marissa-aramouni" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-linkedin-in"></i>
+    </a>
+</div>
+            
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="content reveal" aria-labelledby="aboutTitle">
+      <div class="section-head">
+        <div>
+          <div class="section-title" id="aboutTitle">About</div>
+          <div class="section-sub muted">Brief overview — who I am and how I work</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col glass">
+          <h3 style="margin-top:0">Creating digital solutions & empowering learners</h3>
+          <p class="muted">I build modern, maintainable frontends with a focus on usability, performance and accessibility. I also design short, high-impact lessons and curricula that get students deployment-ready.</p>
+
+          <div style="margin-top:18px" class="row">
+            <div class="stat" style="flex:1">
+              <div class="num">5+</div>
+              <div class="label">Years experience</div>
+            </div>
+            <div class="stat" style="flex:1">
+              <div class="num">10+</div>
+              <div class="label">Projects</div>
+            </div>
+            <div class="stat" style="flex:1">
+              <div class="num">30+</div>
+              <div class="label">Students</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col glass" style="display:flex;flex-direction:column;gap:10px;align-items:stretch;justify-content:center">
+          <h4 style="margin:0 0 6px 0">Primary skills</h4>
+          <div class="skill">
+            <div class="meta"><span>HTML/CSS</span><strong>95%</strong></div>
+            <div class="bar"><div class="fill" data-width="95"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>JavaScript</span><strong>90%</strong></div>
+            <div class="bar"><div class="fill" data-width="90"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>React</span><strong>85%</strong></div>
+            <div class="bar"><div class="fill" data-width="85"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>Shopify / Liquid</span><strong>88%</strong></div>
+            <div class="bar"><div class="fill" data-width="88"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS - SHOPIFY -->
+    <section id="projects-shopify" class="content reveal" aria-labelledby="shopifyTitle">
+      <div class="section-head">
+        <div>
+          <div class="section-title" id="shopifyTitle">Shopify Websites</div>
+          <div class="section-sub muted">Custom e-commerce solutions built on Shopify</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="glass tilt" role="article" aria-label="E-Commerce Fashion Store project">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-shopping-cart" style="opacity:.95"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">E-Commerce Fashion Store</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">Custom Shopify theme + product filtering + payments</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">Shopify</span><span class="tech">Liquid</span><span class="tech">Tailwind</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#" aria-label="Open live demo">Live demo</a>
+              <a class="btn-outline" href="#" aria-label="Open case study">Case study</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass tilt" role="article" aria-label="Beauty Products Store">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-b),var(--accent-a));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-spa"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">Beauty Products Store</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">Shopify theme with subscription model and reviews</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">Shopify</span><span class="tech">Liquid</span><span class="tech">JavaScript</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#">Live demo</a>
+              <a class="btn-outline" href="#">Case study</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass tilt" role="article" aria-label="Home Decor Store">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-couch"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">Home Decor Store</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">Shopify theme with visual product configurator</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">Shopify</span><span class="tech">Liquid</span><span class="tech">React</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#">Live demo</a>
+              <a class="btn-outline" href="#">Case study</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS - WORDPRESS -->
+    <section id="projects-wordpress" class="content reveal" aria-labelledby="wordpressTitle">
+      <div class="section-head">
+        <div>
+          <div class="section-title" id="wordpressTitle">WordPress Websites</div>
+          <div class="section-sub muted">Custom themes and plugins for diverse clients</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="glass tilt" role="article" aria-label="Corporate WordPress Site">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-blog"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">Corporate WordPress Site</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">Full custom theme, team pages & blog for corporate presence</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">WordPress</span><span class="tech">PHP</span><span class="tech">SEO</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#">Live demo</a>
+              <a class="btn-outline" href="#">Case study</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass tilt" role="article" aria-label="Restaurant Website">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-b),var(--accent-a));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-utensils"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">Restaurant Website</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">WordPress theme with online reservations and menu</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">WordPress</span><span class="tech">PHP</span><span class="tech">CSS</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#">Live demo</a>
+              <a class="btn-outline" href="#">Case study</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass tilt" role="article" aria-label="Portfolio Website">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;font-size:1.4rem">
+              <i class="fa-solid fa-palette"></i>
+            </div>
+            <div>
+              <div style="font-weight:800">Portfolio Website</div>
+              <div class="muted" style="font-size:.9rem;margin-top:4px">Custom WordPress theme for creative professional</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="tech-row">
+              <span class="tech">WordPress</span><span class="tech">PHP</span><span class="tech">JavaScript</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <a class="btn-outline" href="#">Live demo</a>
+              <a class="btn-outline" href="#">Case study</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS (detailed) -->
+    <section id="skills" class="content reveal" aria-labelledby="skillsTitle">
+      <div class="section-head">
+        <div>
+          <div class="section-title" id="skillsTitle">Skills</div>
+          <div class="section-sub muted">Technical, teaching and tools</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="glass">
+          <h4 style="margin-top:0">Development</h4>
+          <div class="skill">
+            <div class="meta"><span>HTML / CSS</span><strong>95%</strong></div>
+            <div class="bar"><div class="fill" data-width="95"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>JavaScript</span><strong>90%</strong></div>
+            <div class="bar"><div class="fill" data-width="90"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>React</span><strong>85%</strong></div>
+            <div class="bar"><div class="fill" data-width="85"></div></div>
+          </div>
+        </div>
+
+        <div class="glass">
+          <h4 style="margin-top:0">Teaching</h4>
+          <div class="skill">
+            <div class="meta"><span>Instruction</span><strong>92%</strong></div>
+            <div class="bar"><div class="fill" data-width="92"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>Curriculum</span><strong>87%</strong></div>
+            <div class="bar"><div class="fill" data-width="87"></div></div>
+          </div>
+          <div class="skill">
+            <div class="meta"><span>Assessment</span><strong>90%</strong></div>
+            <div class="bar"><div class="fill" data-width="90"></div></div>
+          </div>
+        </div>
+
+        <div class="glass">
+          <h4 style="margin-top:0">Tools</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+            <div class="tech">Figma</div><div class="tech">Git</div><div class="tech">VS Code</div><div class="tech">Firebase</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="content reveal" aria-labelledby="contactTitle">
+      <div class="section-head">
+        <div>
+          <div class="section-title" id="contactTitle">Contact</div>
+          <div class="section-sub muted">Interested in working together? Send a short message.</div>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="glass" aria-hidden="false">
+          <h4 style="margin-top:0">Get in touch</h4>
+          <p class="muted">Email — <a href="mailto:Marissa.aramouni31@gmail.com">Marissa.aramouni31@gmail.com</a></p>
+          <p class="muted">Phone — <a href="tel:+96170209673">+961 70 209 673</a></p>
+          <p class="muted">Location — Roumieh, Mount Lebanon (Remote friendly)</p>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <a class="btn-outline" href="#" title="Scheduling link">Book meeting</a>
+           
+          </div>
+
+          <hr style="margin:18px 0;border:none;border-top:1px solid var(--glass-border)">
+
+          <h5 style="margin:0 0 8px 0">Availability</h5>
+          <p class="muted" style="margin:0">Mon–Fri, 9AM–6PM (Lebanon time)</p>
+        </div>
+
+        <form class="glass" id="contactForm" aria-label="Contact form" novalidate>
+          <div style="display:flex;gap:10px;margin-bottom:10px">
+            <input type="text" id="name" placeholder="Your name" required aria-required="true">
+            <input type="email" id="email" placeholder="Email" required aria-required="true">
+          </div>
+          <div style="margin-bottom:10px">
+            <select id="service" aria-label="Service">
+              <option value="">I need...</option>
+              <option value="web-dev">Web development</option>
+              <option value="tutoring">Tutoring</option>
+              <option value="consult">Consultation</option>
+            </select>
+          </div>
+          <div style="margin-bottom:12px">
+            <textarea id="message" placeholder="Short message" required aria-required="true"></textarea>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="submit" type="submit">Send message</button>
+            <button type="button" class="btn-outline" id="copyEmail">Copy email</button>
+          </div>
+          <p id="formFeedback" class="muted" style="margin-top:10px;display:none"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer role="contentinfo">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="muted">© <strong>Marissa Aramouni</strong> · 2025</div>
+        <div style="margin-left:14px" class="muted">Built with care • Accessible • Recruiter friendly</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- -------------------------
+       Scripts: animations, tilt, interactions
+       ------------------------- -->
+  <script>
+    // fresh: small helpers and progressive enhancement
+
+    // Theme toggle
+    (function(){
+      const root = document.documentElement;
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+
+      // initial: check saved or prefer
+      const saved = localStorage.getItem('theme');
+      if(saved) root.setAttribute('data-theme', saved);
+      if(root.getAttribute('data-theme') === 'light') { icon.className = 'fa-regular fa-moon'; toggle.setAttribute('aria-pressed','true') }
+
+      toggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', current === 'light' ? 'light' : 'dark');
+        localStorage.setItem('theme', current === 'light' ? 'light' : 'dark');
+        icon.className = current === 'light' ? 'fa-regular fa-moon' : 'fa-regular fa-sun';
+        toggle.setAttribute('aria-pressed', current === 'light');
+      });
+    })();
+
+    // Simple reveal on scroll (IntersectionObserver)
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced) {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        document.querySelectorAll('.fill').forEach(f => f.style.width = f.getAttribute('data-width') + '%');
+        return;
+      }
+
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(ent=>{
+          if(ent.isIntersecting){
+            ent.target.classList.add('visible');
+            // animate skill fills inside the target
+            ent.target.querySelectorAll('.fill').forEach((f, i)=>{
+              const w = f.dataset.width || 0;
+              setTimeout(()=> f.style.width = w + '%', i*120);
+            });
+            obs.unobserve(ent.target);
+          }
+        });
+      }, {threshold: 0.12});
+
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      // also reveal hero immediately if present
+      const hero = document.querySelector('.hero');
+      if(hero) { hero.classList.add('visible'); hero.querySelectorAll('.fill').forEach(f=> f.style.width = f.dataset.width + '%'); }
+    })();
+
+    // Card tilt effect (mouse / pointer)
+    (function(){
+      const tilts = document.querySelectorAll('.tilt');
+      tilts.forEach(card=>{
+        card.addEventListener('pointermove', (e)=>{
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width;
+          const y = (e.clientY - rect.top) / rect.height;
+          const rx = (y - 0.5) * -8; // rotateX
+          const ry = (x - 0.5) * 10; // rotateY
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+        });
+        card.addEventListener('pointerleave', ()=>{ card.style.transform = ''; });
+        // keyboard focus: subtle lift
+        card.addEventListener('focus', ()=> card.style.transform = 'translateY(-8px) scale(1.01)');
+        card.addEventListener('blur', ()=> card.style.transform = '');
+      });
+    })();
+
+    // Contact form handling (non-blocking)
+    (function(){
+      const form = document.getElementById('contactForm');
+      const feedback = document.getElementById('formFeedback');
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = form.querySelector('#name').value.trim();
+        const email = form.querySelector('#email').value.trim();
+        const msg = form.querySelector('#message').value.trim();
+        if(!name || !email || !msg){
+          feedback.style.display = 'block';
+          feedback.textContent = 'Please complete name, email and message fields.';
+          return;
+        }
+
+        // Lightweight UX: open mailto with prefilled message (replace with real endpoint if you have one)
+        const subject = encodeURIComponent('Inquiry from portfolio — ' + (form.querySelector('#service').value || 'General'));
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${msg}`);
+        window.location.href = `mailto:Marissa.aramouni31@gmail.com?subject=${subject}&body=${body}`;
+
+        feedback.style.display = 'block';
+        feedback.textContent = 'Opening your email client — or you can copy the email below.';
+        form.reset();
+      });
+
+      // copy email quick button
+      const copyBtn = document.getElementById('copyEmail');
+      copyBtn.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText('Marissa.aramouni31@gmail.com');
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(()=> copyBtn.textContent = 'Copy email', 1800);
+        }catch(err){
+          copyBtn.textContent = 'Copy failed';
+        }
+      });
+    })();
+
+    // small accessibility helper: keyboard skip to content (if user presses 's')
+    (function(){
+      document.addEventListener('keydown', (e)=>{
+        if(e.key.toLowerCase() === 's' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          document.getElementById('main').scrollIntoView({behavior:'smooth'});
+        }
+      });
+    })();
+
+    // progressive: remove focus outline except for keyboard navigation
+    (function(){
+      const handleMouse = ()=> document.body.classList.add('using-mouse');
+      const handleKey = (e)=> { if(e.key === 'Tab') document.body.classList.remove('using-mouse'); }
+      window.addEventListener('mousedown', handleMouse);
+      window.addEventListener('keydown', handleKey);
+    })();
+
+  </script>
+</body>
+</html>
